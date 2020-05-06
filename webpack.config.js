@@ -1,12 +1,18 @@
 const path = require('path')
+const webpack = require('webpack')
+const HTMLPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
-module.exports = {
+const isDev = process.env.NODE_ENV === 'development' 
+
+const config = {
+  target: 'web',
   entry: path.join(__dirname, 'src/index.js'),
   output: {
     filename: 'bundle.js',
     path: path.join(__dirname, 'dist')
   },
+  mode: 'development',
   module: {
     rules: [
       {
@@ -18,22 +24,49 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.(css|less|scss|styl)$/,
+        test: /\.css$/,
         use: [
           'style-loader',
           'css-loader'
         ]
       },
       {
+        test: /\.styl/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'stylus-loader'
+        ]
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
-          limit: 10000
+          limit: 10000,
+          name: '[name].[ext]'
         }
       }
     ]
   },
   plugins: [
-    new VueLoaderPlugin() 
+    new VueLoaderPlugin(),
+    new HTMLPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: isDev ? '"development"' : '"production"'
+      }
+    })
   ]
 }
+
+if (isDev) {
+  config.devServer = {
+    port: 8000,
+    host: '0.0.0.0',
+    overlay: {
+      errors: true,
+    }
+  }
+}
+
+module.exports = config
