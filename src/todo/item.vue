@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     deleteTodo() {
-
+      this.$emit('deleteTodo', this.todo.id)
     }
   }
 }
