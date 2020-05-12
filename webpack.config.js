@@ -1,14 +1,16 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HTMLPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
 
-const webpack = require('webpack');
+
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
+  target: 'web',
   //入口， __dirname 是当前文件所在目录
   entry: path.join(__dirname, 'src/index.js'),
   //输出
@@ -47,25 +49,13 @@ const config = {
     new CleanWebpackPlugin(),
     // 请确保引入这个插件！
     new VueLoaderPlugin(),
-    new HTMLPlugin(),
-    //new webpack.HotModuleReplacementPlugin(),
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // all options are optional
-      filename: '[name].css',
-      chunkFilename: '[id].css',
-      ignoreOrder: false, // Enable to remove warnings about conflicting order
-    }),
-  ],
-
-  optimization: {
-    splitChunks: {
-      chunks (chunk) {
-        // exclude `my-excluded-chunk`
-        return chunk.name !== 'my-excluded-chunk';
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: isDev ? '"development"' : '"production"'
       }
-    }
-  }
+    }),
+    new HTMLPlugin()
+  ]
 }
 
 if(isDev) {
@@ -83,13 +73,24 @@ if(isDev) {
       'stylus-loader'
     ]  
   });
+  config.devtool = '#cheap-module-eval-source-map'
   config.devServer = {
+    port: 8000,
+    host: 'localhost',
     overlay: {
-      errors: true
+      errors: true,
     },
     hot: true
   }
+  config.plugins.push(
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  )
 } else {
+  config.entry = {
+    app: path.join(__dirname, 'src/index.js'),
+    vendor: ['vue']
+  }
   config.output.filename = '[name].[chunkhash:8].js';
   config.module.rules.push(
     //css预处理器，使用模块化的方式写css代码
@@ -97,15 +98,6 @@ if(isDev) {
       {
         test: /\.styl/,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              // you can specify a publicPath here
-              // by default it uses publicPath in webpackOptions.output
-              publicPath: './',
-              hmr: process.env.NODE_ENV === 'development',
-            },
-          },
           'css-loader',
           { 
             loader: 'postcss-loader', 
@@ -117,12 +109,19 @@ if(isDev) {
   );
 
   config.plugins.push(
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // all options are optional
-      filename: 'styles.[chunkhash].[name].css',
-      chunkFilename: '[id].css',
-      ignoreOrder: false, // Enable to remove warnings about conflicting order
+    // new MiniCssExtractPlugin({
+    //   // Options similar to the same options in webpackOptions.output
+    //   // all options are optional
+    //   filename: 'styles.[chunkhash].[name].css',
+    //   chunkFilename: '[id].css',
+    //   ignoreOrder: false, // Enable to remove warnings about conflicting order
+    // }),
+    new ExtractPlugin('styles.[contentHash:8].css'),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'runtime'
     })
   );
 }
