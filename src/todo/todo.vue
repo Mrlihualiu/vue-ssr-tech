@@ -7,7 +7,7 @@
             placeholder="接下来做什么"
             @keyup.enter="addTodo"
         >
-        <Item  
+        <Items
             v-for="todo in filterTodos"
             :todo="todo"
             :key="todo.id"
