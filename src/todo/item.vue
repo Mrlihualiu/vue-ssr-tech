@@ -34,7 +34,7 @@ export default {
   border-bottom 1px solid rgba(0,0,0,0.06)
   &:hover
     .destory:after
-      content 'x'            
+      content 'x'
   label
     white-space pre-line
     word-break break-all
@@ -80,5 +80,4 @@ export default {
     cursor pointer
     outline none
 </style>
-
 

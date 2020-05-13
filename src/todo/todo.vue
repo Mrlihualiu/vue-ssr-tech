@@ -52,7 +52,7 @@ export default {
       this.todos.unshift({
         id: id++,
         content: e.target.value.trim(),
-        completed: false,
+        completed: false
       })
       e.target.value = null
     },
@@ -93,5 +93,4 @@ export default {
   border none
   box-shadow inset 0 -2px 1px rgba(0, 0, 0, 0.03)
 </style>
-
 
