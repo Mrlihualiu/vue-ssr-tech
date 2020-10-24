@@ -1,5 +1,12 @@
 <template>
   <section class="real-app">
+    <div class="tabs-container">
+      <!-- <tabs>
+        <tab label="all" index="1" />
+        <tab index="2"><span slot="label">active</span></tab>
+        <tab label="completed" index="3" />
+      </tabs> -->
+    </div>
     <input
       type="text"
       class="add-input"
@@ -13,18 +20,18 @@
       :key="todo.id"
       @deleteTodo="deleteTodo"
     ></item>
-    <tabs
+    <helper
       :filter="filter"
       :todos="todos"
       @toggle="toggleTabs"
       @clear="clearCompletedTodos"
-    ></tabs>
+    ></helper>
   </section>
 </template>
 
 <script>
 import Item from './item.vue'
-import Tabs from './tabs.vue'
+import Helper from './tabs.vue'
 let id = 0
 export default {
   data() {
@@ -35,7 +42,7 @@ export default {
   },
   components: {
     Item,
-    Tabs
+    Helper
   },
   computed: {
     filteredTodos() {

@@ -2,6 +2,7 @@
   <div id="app">
     <Header></Header>
     <Todo></Todo>
+    <button @click="notify">click me</button>
     <Footer></Footer>
   </div>
 </template>
@@ -16,6 +17,17 @@ export default {
     Header,
     Footer,
     Todo
+  },
+  mounted() {
+
+  },
+  methods: {
+    notify() {
+      this.$notify({
+        content: 'test $notify1',
+        btn: 'close'
+      })
+    }
   }
 }
 </script>
