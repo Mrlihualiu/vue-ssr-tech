@@ -1,16 +1,27 @@
 <template>
   <div id="app">
     <Header></Header>
-    <Todo></Todo>
-    <button @click="notify">click me</button>
+    <p>{{count}}</p>
+    <p>{{fullName}}</p>
+    <!-- <Todo></Todo> -->
+    <router-link to="/app">app</router-link>
+    <router-link to="/login">login</router-link>
+    <transition name="fade">
+      <router-view></router-view>
+    </transition>
+    <!-- <button @click="notify">click me</button> -->
     <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Header from './todo/header.vue'
-import Footer from './todo/footer.jsx'
-import Todo from './todo/todo.vue'
+import {
+  mapState,
+  mapGetters
+} from 'vuex'
+import Header from './views/todo/header.vue'
+import Footer from './views/todo/footer.jsx'
+import Todo from './views/todo/todo.vue'
 
 export default {
   components: {
@@ -19,7 +30,20 @@ export default {
     Todo
   },
   mounted() {
-
+    let i = 1
+    setInterval(() => {
+      this.$store.commit('updateCount', i++)
+    }, 1000)
+  },
+  computed: {
+    ...mapState(['count']),
+    ...mapGetters(['fullName'])
+    // count() {
+    //   return this.$store.state.count
+    // },
+    // fullName() {
+    //   return this.$store.getters.fullName
+    // }
   },
   methods: {
     notify() {
