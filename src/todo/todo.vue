@@ -1,11 +1,11 @@
 <template>
   <section class="real-app">
     <div class="tabs-container">
-      <!-- <tabs>
+      <tabs>
         <tab label="all" index="1" />
         <tab index="2"><span slot="label">active</span></tab>
         <tab label="completed" index="3" />
-      </tabs> -->
+      </tabs>
     </div>
     <input
       type="text"

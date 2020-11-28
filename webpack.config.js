@@ -22,7 +22,7 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.vue$/,
+        test: /\.vue/,
         loader: 'vue-loader'
       },
       {
